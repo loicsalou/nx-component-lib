@@ -35,7 +35,7 @@
       }
     },
     {
-      "name": "web-components",
+      "name": "web-components-nx-ng-lib",
       "root": "libs/web-components/src",
       "test": "../../../test.js",
       "appRoot": ""
