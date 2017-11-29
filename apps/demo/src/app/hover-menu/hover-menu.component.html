@@ -1,0 +1,9 @@
+<div class="hover-menu-component">
+  <div cass="content">
+    <ng-content></ng-content>
+  </div>
+  <div class="options" [class.flex-column]="direction==='vertical'" [class.flex-row]="direction==='horizontal'">
+    <span class="option small badge-primary" *ngFor="let opt of options" (click)="actionChosen(opt)">{{opt
+      .text}}</span>
+  </div>
+</div>

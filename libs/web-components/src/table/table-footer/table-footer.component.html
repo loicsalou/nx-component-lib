@@ -1,0 +1,9 @@
+<div class="zas-table-footer">
+  <div class="zas-table-footer-row d-flex">
+    <div class="ngContent">
+      <ng-content></ng-content>
+    </div>
+    <span pTooltip="supprimer les prefs" tooltipPosition="left" showDelay="300" hideDelay="500"
+          (click)="tableModel.resetDatatablePrefs()" class="reset-prefs fa fa-trash-o"></span>
+  </div>
+</div>

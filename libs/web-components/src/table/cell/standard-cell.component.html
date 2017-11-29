@@ -1,0 +1,9 @@
+<div [ngSwitch]="columnType(col)">
+  <span *ngSwitchCase="'string'" class="stringCell">{{row[col.field]}}</span>
+  <span *ngSwitchCase="'number'" class="numberCell">{{row[col.field]}}</span>
+  <span *ngSwitchCase="'boolean'" class="booleanCell">
+    <input type="checkbox" [checked]="row[col.field]">
+  </span>
+  <a *ngSwitchCase="'link'" class="linkCell" [href]="row[col.field].url">{{row[col.field].label}}</a>
+  <span *ngSwitchDefault class="otherCell">{{row[col.field]}}</span>
+</div>

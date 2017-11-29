@@ -1,0 +1,124 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div class="app" style="display: flex; flex-direction: column">
+  <div class="row">
+    <div style="display: flex; flex-direction: row">
+      <img width="300" src="/assets/logo.png">
+      <h1>Librairie des composants</h1>
+    </div>
+    <p style="margin-top: 25px;"></p>
+    
+    <div style="display: flex">
+      <fieldset>
+        <legend><h3>Swiper: pour faire défiler un composant horizontalement</h3></legend>
+        <div style="display: flex">
+          <zas-swiper (onSwipe)="swiped($event)">
+            <div>
+              <img [src]="'/assets/component-lib/cave-'+page+'.png'">
+            </div>
+          </zas-swiper>
+          <div class="doc">
+            <ul>
+              <li>défilement de gauche à droite ou de droite à gauche</li>
+              <li>tout composant HTML peut être intégré</li>
+              <li>@Output() 'onSwipe' donne le sens (négatif vers la gauche, positif vers la droite)</li>
+              <li>changement sur une animation de défilement</li>
+            </ul>
+            <code class="html tag start-tag">
+              <pre>&lt;app-swiper (onSwipe)="swiped($event)"&gt;</pre>
+              <pre>   &lt;div&gt;</pre>
+              <pre>      &lt;img [src]="'/assets/component-lib/cave-'+page+'.png'"&gt;</pre>
+              <pre>   &lt;/div&gt;</pre>
+              <pre>&lt;/app-swiper&gt;</pre>
+            </code>
+          </div>
+          <div style="flex-grow: 1">
+            <!--<zas-wrapper>-->
+            <!--<span>type par défaut</span>-->
+            <!--<counter></counter>-->
+            <!--<div [green]>vert</div>-->
+            <!--<p class="class-black">black</p>-->
+            <!--<h1 class="class-black">H1 black</h1>-->
+            <!--</zas-wrapper>-->
+            
+            <zas-wrapper>
+              <ng-container ngProjectAs="p.class-black">
+                <counter></counter>
+              </ng-container>
+            </zas-wrapper>
+          </div>
+          <div style="flex-grow: 1">
+            <zas-wrapper-template>
+              <ng-template let-context>
+                <div>colonne: {{context.col}}</div>
+                <div>valeur: {{context.row[context.col]}}</div>
+              </ng-template>
+            </zas-wrapper-template>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="row">
+    <div style="display: flex">
+      <fieldset>
+        <legend><h3>Table: un exemple de zas-wrapper pour la table PrimeNg</h3></legend>
+        <div style="display: flex; min-height: 350px;">
+          <p-dataTable #zasTable *ngIf="bottlesModel" [alwaysShowPaginator]="false" [rowHover]="true"
+                       [value]="bottlesModel.data" resizableColumns="true" reorderableColumns="true"
+                       (onColResize)="bottlesModel.colResize($event)"
+                       [rows]="10" [paginator]="bottlesModel.paginatorDisplayed" [rowsPerPageOptions]="[10,15,20,50]"
+                       (onColReorder)="bottlesModel.colReordered($event)"
+                       (onSort)="bottlesModel.sorted($event)" [sortField]="bottlesModel.sortOptions?.field"
+                       [sortOrder]="bottlesModel.sortOptions?.order"
+                       rowGroupMode="subheader" [groupField]="bottlesModel.groupingColumn()" expandableRowGroups="true"
+                       [sortableRowGroup]="true">
+            <p-header>
+              <zas-table-header #zasHeader [tableModel]="bottlesModel" [table]="zasTable">
+                <h3>ceci est le texte du header</h3>
+              </zas-table-header>
+            </p-header>
+            
+            <ng-template pTemplate="rowgroupheader" let-rowData>
+              <span>{{bottlesModel.getHeader(rowData, bottlesModel.groupingColumn())}}</span>
+            </ng-template>
+            
+            <p-column *ngFor="let col of bottlesModel.visibleColumns" [field]="col.field"
+                      header="{{col.label}}"
+                      [sortable]="col.sortable" [style]="col.style">
+              
+              <ng-template pTemplate="body" let-row="rowData">
+                <ng-container [ngSwitch]="col.field">
+                  <div *ngSwitchCase="'link'">
+                    <a [href]="row[col.field].url" target="_blank">{{row[col.field].label}}</a>
+                  </div>
+                  <div *ngSwitchCase="'vintage'" (mouseenter)="openOverlay($event,opanel, row, col.field)">
+                    <!--<zas-hover-menu [options]="[{text: 'D'}, {text: 'V'}]" [direction]="'horizontal'"-->
+                    <!--(action)="menuTriggered($event)">-->
+                    <span>{{row[col.field]}}</span>
+                    <!--</zas-hover-menu>-->
+                  </div>
+                  
+                  <zas-standard-cell *ngSwitchDefault [col]="col" [row]="row">
+                  </zas-standard-cell>
+                </ng-container>
+              </ng-template>
+            </p-column>
+            
+            <p-footer class="d-block">
+              <zas-table-footer [tableModel]="bottlesModel"><h4>Ceci est le footer de ma table</h4></zas-table-footer>
+            </p-footer>
+          </p-dataTable>
+          
+          <p-overlayPanel #opanel>
+            <div class="options" [class.flex-column]="direction==='vertical'"
+                 [class.flex-row]="direction==='horizontal'">
+    <span class="option small badge-primary" *ngFor="let opt of options" (click)="actionChosen(opt)">{{opt
+      .text}}</span>
+            </div>
+          </p-overlayPanel>
+        
+        </div>
+      </fieldset>
+    </div>
+  </div>
+</div>

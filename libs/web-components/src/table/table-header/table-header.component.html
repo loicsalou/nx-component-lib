@@ -1,0 +1,23 @@
+<div class="zas-table-header d-flex flex-row">
+  <div class="table-filter">
+    <div>
+      <i class="fa fa-search"></i>
+      <input #globalFilter type="text" pInputText size="50" placeholder="filtre">
+    </div>
+  </div>
+  <div class="ngContent">
+    <ng-content></ng-content>
+  </div>
+  <div class="table-export d-flex flex-row">
+    <button type="button" class="ui-button p-2" (click)="table.exportCSV()">
+      <span>Export</span><i class="ml-2 fa fa-download"></i>
+    </button>
+  </div>
+  <div class="table-col-chooser">
+    <p-multiSelect [options]="tableModel.colOptions"
+                   [maxSelectedLabels]="4"
+                   [selectedItemsLabel]="selectedItemsLabel"
+                   (onChange)="tableModel.columnsToggled($event)"
+                   [(ngModel)]="tableModel.displayedColumns"></p-multiSelect>
+  </div>
+</div>

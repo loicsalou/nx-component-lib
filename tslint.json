@@ -88,13 +88,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "app",
+      "zas",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "app",
+      "zas",
       "kebab-case"
     ],
     "use-input-property-decorator": true,

@@ -1,0 +1,37 @@
+.zas-table-header {
+
+  i.fa-search {
+    font-size: 1.3rem;
+    margin: auto 0 auto;
+    width: 1.5rem;
+  }
+
+  div {
+    //border: thin solid red;
+    height: 42px;
+
+    & > div {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+
+  .table-filter input {
+    height: 100%;
+    padding: 10px;
+  }
+
+  .table-export {
+    margin: 0 10px 0 auto;
+    flex-grow: 0;
+  }
+
+  .table-col-chooser {
+    margin-right: 30px;
+  }
+
+  .ngContent {
+    flex-grow: 1;
+    padding: 3px 12px;
+  }
+}

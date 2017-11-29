@@ -1,0 +1,15 @@
+<div class="swiper-component">
+  <div class="swiper left" (click)="swipeLeft()">
+    <div class="swiper-inner">
+      <span class="fa fa-caret-left"></span>
+    </div>
+  </div>
+  <div class="content" style="display: flex" [@transition]='state' (@transition.done)="stateIn($event)">
+    <ng-content></ng-content>
+  </div>
+  <div class="swiper right" (click)="swipeRight()">
+    <div class="swiper-inner">
+      <span class="fa fa-caret-right"></span>
+    </div>
+  </div>
+</div>

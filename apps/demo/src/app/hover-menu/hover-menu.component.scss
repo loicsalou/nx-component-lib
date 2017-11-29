@@ -1,0 +1,39 @@
+div.hover-menu-component {
+  align-items: center;
+  position: relative;
+  overflow: visible;
+
+  div.content {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  div.options {
+    display: none;
+    margin-left: 1rem;
+  }
+
+  &:hover div.options {
+    position: absolute;
+    background: white;
+    border: thin solid grey;
+    left: 30px;
+    top: 0;
+    border-radius: 20%;
+    display: flex;
+    cursor: pointer;
+    margin-left: 1rem;
+
+    span.option {
+      border: 2px solid transparent;
+      border-radius: 20%;
+      padding: 3px;
+      margin: 3px;
+    }
+
+    span.option:hover {
+      border: 2px solid red;
+    }
+  }
+}

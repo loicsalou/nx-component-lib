@@ -1,0 +1,23 @@
+.swiper-component {
+  display: flex;
+  align-items: stretch;
+
+  div.swiper {
+    display: flex;
+    margin: 0 1rem;
+    &.shadowed {
+      padding: 4px;
+      border: thin solid lightgray;
+      box-shadow: 4px 4px lightgray;
+    }
+  }
+
+  div.swiper-inner {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .fa {
+    font-size: 2rem;
+  }
+}

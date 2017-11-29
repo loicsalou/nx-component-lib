@@ -1,0 +1,16 @@
+.zas-table-footer {
+  .zas-table-footer-row {
+    display: flex;
+    text-align: left;
+
+    .ngContent {
+      flex-grow: 1;
+    }
+
+    .reset-prefs {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      width: 2rem;
+    }
+  }
+}
