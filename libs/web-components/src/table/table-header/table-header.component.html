@@ -14,10 +14,10 @@
     </button>
   </div>
   <div class="table-col-chooser">
-    <p-multiSelect [options]="tableModel.colOptions"
+    <p-multiSelect [options]="tableModel.colChooserOptions"
                    [maxSelectedLabels]="4"
                    [selectedItemsLabel]="selectedItemsLabel"
                    (onChange)="tableModel.columnsToggled($event)"
-                   [(ngModel)]="tableModel.displayedColumns"></p-multiSelect>
+                   [(ngModel)]="tableModel.colChooserColumns"></p-multiSelect>
   </div>
 </div>

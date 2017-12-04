@@ -1,4 +1,4 @@
-import {DataTable} from 'primeng/primeng';
+import {DataTable, SortMeta} from 'primeng/primeng';
 import {SortOption} from './table-sorting';
 
 /**
@@ -16,16 +16,14 @@ export class PrimeDatatableApi {
     this.datatable = datatable;
   }
 
-  setMultiSortMeta(multisortMeta) {
+  setMultiSortMeta(multisortMeta: SortMeta[]) {
+    this.datatable.sortMode='multiple';
     this.datatable.multiSortMeta = multisortMeta;
-  }
-
-  sortMultiple() {
-    this.datatable.sortMultiple();
   }
 
   setSortField(sortOptions: SortOption) {
     if (sortOptions) {
+      this.datatable.sortMode='single';
       this.datatable.sortField = sortOptions.field;
       this.datatable.sortOrder = sortOptions.order;
     }
@@ -33,5 +31,21 @@ export class PrimeDatatableApi {
 
   sortSingle() {
     this.datatable.sortSingle();
+  }
+
+  groupOn(col: string) {
+    if (col) {
+      this.datatable.groupField = col;
+      this.datatable.rowGroupMode = 'subheader';
+      this.datatable.expandableRowGroups = true;
+    } else {
+      this.datatable.groupField = undefined;
+      this.datatable.rowGroupMode = undefined;
+      this.datatable.expandableRowGroups = undefined;
+    }
+  }
+
+  getData() {
+    return this.datatable.value;
   }
 }

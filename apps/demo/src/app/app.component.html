@@ -70,16 +70,18 @@
                        (onColReorder)="bottlesModel.colReordered($event)"
                        (onSort)="bottlesModel.sorted($event)" [sortField]="bottlesModel.sortOptions?.field"
                        [sortOrder]="bottlesModel.sortOptions?.order"
-                       rowGroupMode="subheader" [groupField]="bottlesModel.groupingColumn()" expandableRowGroups="true"
                        [sortableRowGroup]="true">
+            <!--rowGroupMode="subheader" [groupField]="bottlesModel.groupingColumn()" expandableRowGroups="true"-->
             <p-header>
               <zas-table-header #zasHeader [tableModel]="bottlesModel" [table]="zasTable">
-                <h3>ceci est le texte du header</h3>
+                <label for="toggleGroup">Grouper</label>
+                <input id="toggleGroup" type="checkbox" [(ngModel)]="bottlesModel.grouped"
+                       (change)="bottlesModel.applyGrouping()">
               </zas-table-header>
             </p-header>
             
             <ng-template pTemplate="rowgroupheader" let-rowData>
-              <span>{{bottlesModel.getHeader(rowData, bottlesModel.groupingColumn())}}</span>
+              <span>{{bottlesModel.getGroupHeader(rowData, bottlesModel.groupingColumn())}}</span>
             </ng-template>
             
             <p-column *ngFor="let col of bottlesModel.visibleColumns" [field]="col.field"
