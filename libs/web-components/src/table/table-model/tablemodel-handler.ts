@@ -10,30 +10,39 @@ import {PreferencesManagerService} from '../../shared';
 
 export class TableModelHandler<T> {
   // en cours d'affichage: utilisées dans le multiselect du choix des colonnes
-  displayedColumns: string[];
-  // colonnes visibles dans les headers de la table
+  colChooserColumns: string[];
+  // mapping label de la colonne vers le champ (utilisé pour les selectItems du choix des colonnes affichées)
+  colChooserOptions: SelectItem[];
+
+  // colonnes visibles dans les groupHeaders de la table
   visibleColumns: Column[];
+
   // Données de la table
   data: T[];
-  // Données de la table
+
+  // Pagination
   paginatorDisplayed = true;
+
   // options de tri
   sortOptions: SortOption;
-  // mapping label de la colonne vers le champ (utilisé pour les selectItems du choix des colonnes affichées)
-  colOptions: SelectItem[];
   // grouping facultatif
+  grouped = false;
   groupingOptions: GroupingOption;
+
   // clé dans le storage
   private key: string;
-  // colonnes disponibles, affichées et visibles
+
+  // colonnes disponibles
   private columns: Column[];
-  // egroupement des lignes par colonne de regroupement
+
+  // Regroupement des lignes par colonne de regroupement
   private groups: Dictionary<T[]> = {};
 
-  // Les headers sont créés par le GroupHandler si il est fourni et n'ont de sens que pour les tables avec regroupement
-  // de lignes
-  private headers: Map<any, any> = new Map<any, any>();
+  // Les groupHeaders sont créés par le GroupHandler si il est fourni et n'ont de sens que pour les tables avec
+  // regroupement de lignes
+  private groupHeaders: Map<any, any> = new Map<any, any>();
 
+  // primeNg datatable
   private datatable: PrimeDatatableApi;
 
   constructor(key: string,
@@ -46,14 +55,14 @@ export class TableModelHandler<T> {
     if (!columns || this.columns.length === 0) {
       throw new Error('une table a au moins une colonne');
     }
-    if (typeof groupingOptions === 'boolean') {
-      if (groupingOptions) {
-        this.groupingOptions = {field: columns[ 0 ].field, order: 1};
-      }
-    } else {
-      this.groupingOptions = groupingOptions;
-    }
-    this.reinitTableModel();
+
+    // Options de groupagge
+    this.initGrouping(this.groupingOptions);
+
+    // initialisation des options du header
+    this.initTableModel();
+
+    // appliquer les préférences
     this.restoreDatatablePrefs();
   }
 
@@ -62,16 +71,16 @@ export class TableModelHandler<T> {
    * @returns {string}
    */
   groupingColumn(): string {
-    if (!this.groupingOptions) {
-      return undefined;
+    if (this.grouped) {
+      return this.groupingOptions.field;
     }
 
-    return this.groupingOptions.field;
+    return undefined;
   }
 
-  getHeader(row: T, key: any) {
+  getGroupHeader(row: T, key: any) {
     const groupingValue = row[ this.groupingColumn() ];
-    return this.headers[ groupingValue ][ key ];
+    return this.groupHeaders[ groupingValue ][ key ];
   }
 
   /**
@@ -82,10 +91,7 @@ export class TableModelHandler<T> {
     this.data = data;
     this.groups = this.groupData(data);
     this.handleGroups(this.groups);
-    // requis, sinon la datatable n'a pas encore conscience que les data sont là. Il faut laisser le process se
-    // terminer avant de traiter le sort ==> un simple timeout suffit, ce n'est pas une question de temps mais
-    // d'asynchronisme
-    setTimeout(() => this.sort(this.sortOptions), 100);
+    this.sort(this.sortOptions);
   }
 
   /**
@@ -99,7 +105,7 @@ export class TableModelHandler<T> {
 
   // vent handling
   columnsToggled(event: ToggleEvent) {
-    this.displayedColumns = event.value;
+    this.colChooserColumns = event.value;
     this.rebuildVisibleColumns();
     this.savePrefs();
   }
@@ -117,10 +123,10 @@ export class TableModelHandler<T> {
   }
 
   colReordered(event: ReorderEvent) {
-    this.displayedColumns = event.columns.map(col => col.field);
+    this.colChooserColumns = event.columns.map(col => col.field);
     this.rebuildVisibleColumns();
-    if (this.groupingOptions) {
-      this.groupingOptions.field = this.displayedColumns[ 0 ];
+    if (this.grouped) {
+      this.groupingOptions.field = this.colChooserColumns[ 0 ];
       this.groups = this.groupData(this.data);
       this.handleGroups(this.groups);
       this.sort(this.sortOptions);
@@ -143,41 +149,47 @@ export class TableModelHandler<T> {
 
   resetDatatablePrefs() {
     this.preferencesService.resetPrefs(this.key);
-    this.reinitTableModel();
+    this.initTableModel();
   }
 
   sort(sortOptions: SortOption) {
-    // ODO le multisort ne semble pas fonctionner, je l'enlève, à revoir si besoin
+    // TODO le multisort ne semble pas fonctionner, je l'enlève, à revoir si besoin
     if (this.datatable) {
-      if (this.groupingOptions) {
+      if (this.grouped) {
         if (!sortOptions) {
           sortOptions = {field: this.groupingOptions.field, order: this.groupingOptions.order};
         }
-        // arder le tri demandé
+        // garder le tri demandé
         this.sortOptions = {field: sortOptions.field, order: sortOptions.order};
         // i tri sur la colonne de regroupement prendre le sens du tri dans les options de regroupement
         if (this.sortOptions.field === this.groupingOptions.field) {
           this.groupingOptions.order = sortOptions.order;
         }
-        // i on a la table, imposer le nouvel ordre de tri, par options de grouping en premier
-        if (this.datatable) {
-          const multisortMeta: SortMeta[] = [
-            {field: this.groupingOptions.field, order: this.groupingOptions.order},
-            {field: sortOptions.field, order: sortOptions.order}
-          ];
-          this.datatable.setMultiSortMeta(multisortMeta);
-          this.datatable.sortMultiple();
-        }
+        // imposer le nouvel ordre de tri, par options de grouping en premier
+        const multisortMeta: SortMeta[] = [
+          {field: this.groupingOptions.field, order: this.groupingOptions.order},
+          {field: sortOptions.field, order: sortOptions.order}
+        ];
+        this.datatable.setMultiSortMeta(multisortMeta);
+        this.data = this.datatable.getData();
       } else {
         if (!sortOptions) {
           sortOptions = {field: this.columns[ 0 ].field, order: 1};
         }
         this.sortOptions = {field: sortOptions.field, order: sortOptions.order};
         this.datatable.setSortField(this.sortOptions);
-        this.datatable.sortSingle();
       }
 
       this.savePrefs();
+    }
+  }
+
+  // Appliquer l'option de groupage
+  applyGrouping() {
+    this.initGrouping(this.grouped);
+    if (this.grouped) {
+      this.groups = this.groupData(this.data);
+      this.handleGroups(this.groups);
     }
   }
 
@@ -187,18 +199,18 @@ export class TableModelHandler<T> {
 
   private handleGroups(groups: Dictionary<T[]>) {
     if (this.groupHandler) {
-      this.headers = this.groupHandler.buildHeaders(groups);
+      this.groupHeaders = this.groupHandler.buildHeaders(groups);
     } else {
-      this.headers = new Map<string, string>();
+      this.groupHeaders = new Map<string, string>();
       Object.getOwnPropertyNames(this.groups).forEach(key => {
-        this.headers[ key ] = {};
-        this.headers[ key ][ this.groupingColumn() ] = key;
+        this.groupHeaders[ key ] = {};
+        this.groupHeaders[ key ][ this.groupingColumn() ] = key;
       });
     }
   }
 
-  private reinitTableModel() {
-    this.displayedColumns = this.columns
+  private initTableModel() {
+    this.colChooserColumns = this.columns
       .filter(col => col.visible === undefined || col.visible === true)
       .map(col => col.field);
     this.sortOptions = undefined;
@@ -228,7 +240,7 @@ export class TableModelHandler<T> {
     if (!this.visibleColumns) {
       this.visibleColumns = [];
     }
-    this.visibleColumns = this.displayedColumns
+    this.visibleColumns = this.colChooserColumns
       .map(field => {
         const resultCol = this.columns.find(col => field === col.field);
         if (resultCol) {
@@ -249,17 +261,17 @@ export class TableModelHandler<T> {
           return Object.assign({}, resultCol);
         } else {
           // colonne demandée non définie, on l'écarte
-          this.displayedColumns = this.displayedColumns.filter(col => col !== field);
+          this.colChooserColumns = this.colChooserColumns.filter(col => col !== field);
         }
       })
       .filter(col => col !== undefined);
   }
 
   /**
-   * initialise les traductions des headers de colonnes dans le select du choix des colonnes
+   * initialise les traductions des groupHeaders de colonnes dans le select du choix des colonnes
    */
   private initColLabels() {
-    this.colOptions = this.columns.map(col => {
+    this.colChooserOptions = this.columns.map(col => {
       return {
         label: col.label,
         value: col.field,
@@ -273,7 +285,7 @@ export class TableModelHandler<T> {
    */
   private savePrefs() {
     const preferences: TablePreferences = {
-      displayedColumns: this.displayedColumns,
+      displayedColumns: this.colChooserColumns,
       visibleColumns: this.visibleColumns.map(vc => {
         const saved = Object.assign({}, vc);
         delete saved.sortable;
@@ -294,7 +306,7 @@ export class TableModelHandler<T> {
   private restoreDatatablePrefs(): any {
     const restored: TablePreferences = this.preferencesService.restorePrefs(this.key);
     if (restored) {
-      this.displayedColumns = restored.displayedColumns;
+      this.colChooserColumns = restored.displayedColumns;
       this.sortOptions = restored.sortOptions ? restored.sortOptions : this.sortOptions;
       this.groupingOptions = restored.groupingOptions ? restored.groupingOptions : this.groupingOptions;
       this.visibleColumns = restored.visibleColumns.map((col: Column) => {
@@ -304,6 +316,23 @@ export class TableModelHandler<T> {
         return col;
       });
       this.rebuildVisibleColumns();
+    }
+  }
+
+  private initGrouping(groupingOptions: GroupingOption | boolean) {
+    if (typeof groupingOptions === 'boolean') {
+      if (groupingOptions) {
+        this.grouped = true;
+        this.groupingOptions = {field: this.colChooserColumns[ 0 ], order: 1};
+      }
+    } else {
+      this.groupingOptions = groupingOptions;
+      this.grouped = groupingOptions !== undefined;
+    }
+
+    if (this.datatable) {
+      this.datatable.groupOn(this.groupingColumn());
+      this.sort(this.sortOptions);
     }
   }
 }

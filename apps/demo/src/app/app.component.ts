@@ -1,7 +1,10 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {Option} from './hover-menu/hover-menu.component';
 import {DataTable, OverlayPanel} from 'primeng/primeng';
-import {Column, LocalPreferencesManagerService, TableModelHandler} from '@nx-component-lib/web-components';
+import {
+  Column, LocalPreferencesManagerService, PrimeDatatableApi,
+  TableModelHandler
+} from '@nx-component-lib/web-components';
 
 export class Link {
   url: string;
@@ -151,7 +154,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.bottlesModel.setDatatable(this.table);
+    this.bottlesModel.setDatatable(new PrimeDatatableApi(this.table));
   }
 
   swiped(sense: number) {

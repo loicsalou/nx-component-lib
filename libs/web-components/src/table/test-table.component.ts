@@ -45,7 +45,7 @@ export interface Bottle {
                  </p-header>
 
                  <ng-template pTemplate="rowgroupheader" let-rowData>
-                   <span>{{bottlesModel.getHeader(rowData, bottlesModel.groupingColumn())}}</span>
+                   <span>{{bottlesModel.getGroupHeader(rowData, bottlesModel.groupingColumn())}}</span>
                  </ng-template>
 
                  <p-column *ngFor="let col of bottlesModel.visibleColumns" [field]="col.field"
