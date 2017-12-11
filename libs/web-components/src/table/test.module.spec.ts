@@ -7,10 +7,12 @@ import {NavsModule} from '../navs';
 import {SwiperModule} from '../swiper';
 import {TableModule} from '../table';
 import {PreferencesManagerModule} from '../shared';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
             imports: [
               CommonModule,
+              FormsModule,
               NavsModule,
               SwiperModule,
               TableModule,

@@ -37,11 +37,13 @@ export interface Bottle {
                             (onColReorder)="bottlesModel.colReordered($event)"
                             (onSort)="bottlesModel.sorted($event)" [sortField]="bottlesModel.sortOptions?.field"
                             [sortOrder]="bottlesModel.sortOptions?.order"
-                            rowGroupMode="subheader" [groupField]="bottlesModel.groupingColumn()"
-                            expandableRowGroups="true"
                             [sortableRowGroup]="true">
                  <p-header>
-                   <zas-table-header #zasHeader [tableModel]="bottlesModel" [table]="zasTable"></zas-table-header>
+                   <zas-table-header #zasHeader [tableModel]="bottlesModel" [table]="zasTable">
+                     <label for="toggleGroup">Grouper</label>
+                     <input id="toggleGroup" type="checkbox" [(ngModel)]="bottlesModel.grouped"
+                            (change)="bottlesModel.applyGrouping()">
+                   </zas-table-header>
                  </p-header>
 
                  <ng-template pTemplate="rowgroupheader" let-rowData>

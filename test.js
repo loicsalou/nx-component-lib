@@ -18,9 +18,10 @@ getTestBed().initTestEnvironment(
   platformBrowserDynamicTesting()
 );
 // Then we find all the tests.
-const contextApps = require.context('./apps', true, /\.spec\.ts$/);
+//SAO: on teste la librairie seulement par l'appe de démo
+// const contextApps = require.context('./apps', true, /\.spec\.ts$/);
 // And load the modules.
-contextApps.keys().map(contextApps);
+// contextApps.keys().map(contextApps);
 
 const contextLibs = require.context('./libs', true, /\.spec\.ts$/);
 // And load the modules.

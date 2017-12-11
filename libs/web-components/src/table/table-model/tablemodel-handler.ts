@@ -89,8 +89,10 @@ export class TableModelHandler<T> {
    */
   setData(data: T[]) {
     this.data = data;
-    this.groups = this.groupData(data);
-    this.handleGroups(this.groups);
+    if (this.grouped) {
+      this.groups = this.groupData(data);
+      this.handleGroups(this.groups);
+    }
     this.sort(this.sortOptions);
   }
 

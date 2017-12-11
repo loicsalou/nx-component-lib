@@ -33,7 +33,7 @@ describe('TestTableComponent and TableHeaderComponent', () => {
   });
 
   it('should wrap TableHeaderComponent', () => {
-    // iven the table
+    // given the table
     const debugEl = fixture.debugElement;
     // etch zas-table-header
     const zasHeader = debugEl.query(By.css('.ui-datatable-header div.zas-table-header'));
@@ -42,7 +42,7 @@ describe('TestTableComponent and TableHeaderComponent', () => {
   });
 
   it('TableHeaderComponent should wrap search input', () => {
-    // iven the table
+    // given the table
     const tableEl = fixture.debugElement;
     // etch zas-table-header
     const zasHeader = tableEl.query(By.css('.ui-datatable-header div.zas-table-header'));
@@ -56,7 +56,7 @@ describe('TestTableComponent and TableHeaderComponent', () => {
   });
 
   it('TableHeaderComponent should wrap search input', () => {
-    // iven the table
+    // given the table
     const tableEl = fixture.debugElement;
     // etch zas-table-header
     const zasHeader = tableEl.query(By.css('.ui-datatable-header div.zas-table-header'));
@@ -68,7 +68,7 @@ describe('TestTableComponent and TableHeaderComponent', () => {
   });
 
   it('TableHeaderComponent should wrap column chooser', () => {
-    // iven the table
+    // given the table
     const tableEl = fixture.debugElement;
     // etch zas-table-header
     const zasHeader = tableEl.query(By.css('.ui-datatable-header div.zas-table-header'));
