@@ -1,3 +1,8 @@
+# commits
+
+[convention sur lers messages de commit GIT](https://github.com/angular/material2/blob/master/CONTRIBUTING
+.md#-commit-message-guidelines)
+
 # NxComponentLib
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.0 using [Nrwl Nx](https://nrwl.io/nx).

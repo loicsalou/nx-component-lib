@@ -3,11 +3,13 @@
   "version": "0.7.2",
   "license": "MIT",
   "scripts": {
+    "commitmsg": "validate-commit-msg",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
+    "sass-lint": "sass-lint",
     "e2e": "ng e2e",
     "format": "prettier --single-quote --print-width 120 --write \"{apps,libs}/**/*.ts\"",
     "build:lib": "ng-packagr -p ng-package.json",
@@ -50,6 +52,9 @@
     "@types/node": "~6.0.60",
     "classlist.js": "1.1.20150312",
     "codelyzer": "~3.1.1",
+    "commitizen": "2.9.6",
+    "cz-conventional-changelog": "2.1.0",
+    "husky": "0.14.3",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "~1.7.0",
@@ -61,8 +66,10 @@
     "ng-packagr": "1.6.0",
     "prettier": "1.7.4",
     "protractor": "~5.1.2",
+    "sass-lint": "1.12.1",
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
-    "typescript": "2.5.3"
+    "typescript": "2.5.3",
+    "validate-commit-msg": "2.14.0"
   }
 }
