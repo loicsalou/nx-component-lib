@@ -1,6 +1,6 @@
 {
   "name": "web-components-nx-ng-lib",
-  "version": "0.7.2",
+  "version": "0.9.1",
   "license": "MIT",
   "scripts": {
     "commitmsg": "validate-commit-msg",
@@ -14,7 +14,13 @@
     "format": "prettier --single-quote --print-width 120 --write \"{apps,libs}/**/*.ts\"",
     "build:lib": "ng-packagr -p ng-package.json",
     "deploy:lib": "ng-packagr -p ng-package.json && npm publish dist/web-components",
-    "help": "ng-packagr -h"
+    "help": "ng-packagr -h",
+    "release": "standard-version"
+  },
+  "standard-version": {
+    "skip": {
+      "commit": true
+    }
   },
   "private": true,
   "dependencies": {
@@ -67,6 +73,7 @@
     "prettier": "1.7.4",
     "protractor": "~5.1.2",
     "sass-lint": "1.12.1",
+    "standard-version": "4.2.0",
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
     "typescript": "2.5.3",
